@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 2.6)
+project(obstavoid)
+include_directories("/home/ndryden/include")
+link_directories("/home/ndryden/lib")
+add_executable(test obstavoid.cpp main.cpp)
+target_link_libraries(test opencv_core opencv_features2d opencv_highgui opencv_nonfree)
