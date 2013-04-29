@@ -4,6 +4,7 @@
 #include <opencv2/nonfree/features2d.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include "obstavoid.h"
+#include "MOPSFeatures.h"
 
 void match_pipeline(cv::Mat img1, cv::Mat img2) {
     pthread_t threads[2];
@@ -88,5 +89,29 @@ void* sift_match(void* _imgs) {
 
 void* mops_match(void* _imgs) {
     printf("MOPS hello!\n");
+    img2_t* imgs = (img2_t*) _imgs;
+    int nUpLevels = 0, nDnLevels = 1;
+    MOPSFeatures feats(nUpLevels,nDnLevels);
+    cv::FlannBasedMatcher matcher;
+    std::vector<cv::KeyPoint> kp1;
+    std::vector<cv::KeyPoint> kp2;
+    cv::Mat desc1;
+    cv::Mat desc2;
+    std::vector<cv::DMatch> matches;
+    std::vector<cv::DMatch> good_matches;
+
+    // Note: If still too slow, we can thread these.
+    // Detect keypoints and get descriptors.
+    feats.getFeatures(imgs->img1, kp1, desc1);
+    feats.getFeatures(imgs->img2, kp2, desc2);
+
+    // Match descriptors.
+    matcher.match(desc1, desc2, matches);
+    // Threshold to only good matches.
+    for (size_t i = 0; i < desc1.rows; ++i) {
+	if (matches[i].distance < MOPS_DISTANCE_THRESH) {
+	    good_matches.push_back(matches[i]);
+	}
+    }
     return NULL;
 }
