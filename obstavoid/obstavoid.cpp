@@ -19,9 +19,14 @@ void match_pipeline(cv::Mat img1, cv::Mat img2) {
 	return;
     }
 
-    // Convert matrix to greyscale.
-    cv::cvtColor(img1, img1, CV_BGR2GRAY);
-    cv::cvtColor(img2, img2, CV_BGR2GRAY);
+    // Convert matrix to greyscale if needed.
+    // Is there a better way to check if an image is grayscale?
+    if (img1.channels() != 1) {
+	cv::cvtColor(img1, img1, CV_BGR2GRAY);
+    }
+    if (img2.channels() != 1) {
+	cv::cvtColor(img2, img2, CV_BGR2GRAY);
+    }
     
     sift_imgs.img1 = img1;
     sift_imgs.img2 = img2;
