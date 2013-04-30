@@ -3,6 +3,7 @@
 #include <opencv2/features2d/features2d.hpp>
 #include <opencv2/nonfree/features2d.hpp>
 #include <opencv2/highgui/highgui.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
 #include "obstavoid.h"
 #include "MOPSFeatures.h"
 
@@ -12,6 +13,16 @@ void match_pipeline(cv::Mat img1, cv::Mat img2) {
     img2_t sift_imgs;
     img2_t mops_imgs;
 
+    // Ensure we have good input.
+    if (!img1.total() || !img2.total()) {
+	printf("Need non-empty images!\n");
+	return;
+    }
+
+    // Convert matrix to greyscale.
+    cv::cvtColor(img1, img1, CV_BGR2GRAY);
+    cv::cvtColor(img2, img2, CV_BGR2GRAY);
+    
     sift_imgs.img1 = img1;
     sift_imgs.img2 = img2;
     // Clone matrix so there's no dependencies.
