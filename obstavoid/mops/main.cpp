@@ -9,7 +9,6 @@ bool getDescriptors(string fileName, vector<KeyPoint>& keypoints, Mat& desc)
     cout << "Loading image: " << fileName << endl;
 
     Mat image = imread(fileName);
-
     if (image.empty()) {
 	cerr << "Not an image, please give image filename" << endl;
 	return false;

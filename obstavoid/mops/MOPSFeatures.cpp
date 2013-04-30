@@ -9,6 +9,8 @@ MOPSFeatures::MOPSFeatures(int nUpLevels, int nDnLevels)
 void MOPSFeatures::getFeatures(const Mat& image, vector<KeyPoint>& keypoints, 
 			       Mat& desc)
 {
+    if (image.empty())
+	return;
     Mat tmp;
     tmp = image;
     vector<ImgPyr> imgPyr;

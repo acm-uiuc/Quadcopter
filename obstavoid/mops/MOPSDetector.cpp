@@ -108,7 +108,7 @@ void MOPSDetector::detect(vector<ImgPyr>& imgPyr, vector<KeyPoint>& keypoints)
 	/// Drawing a circle around corners
 	for (int y = 0; y < dst_norm.rows; y++) { 
 	    for (int x = 0; x < dst_norm.cols; x++) {
-		float response = dst_norm.at<float>(y,x);
+		float response = dst_norm.at<float>(x,y);
 		if ((int) response > thresh) {
 		     double theta = getOrientation(grad_x,grad_y,x,y);
 		     if (isWithinBounds(imgPyr[i].img_,x,y,theta)) {
