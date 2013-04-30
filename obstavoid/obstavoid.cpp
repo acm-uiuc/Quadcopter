@@ -100,6 +100,7 @@ void* sift_match(void* _imgs) {
 	    good_matches.push_back(matches[i]);
 	}
     }
+
     return NULL;
 }
 
@@ -130,4 +131,27 @@ void* mops_match(void* _imgs) {
 	}
     }
     return NULL;
+}
+
+cv::Mat reconstruct_3d(cv::Mat camera_proj, std::vector<cv::DMatch> matches, std::vector<cv::KeyPoint> kp1, std::vector<cv::KeyPoint> kp2) {
+    cv::Mat homo_pts;
+    cv::Mat inhomo_pts;
+    std::vector<cv::Point2f> img1_pts;
+    std::vector<cv::Point2f> img2_pts;
+
+    // Get the points associated with the matches.
+    for (size_t i = 0; i < matches.size(); ++i) {
+	img1_pts.push_back(kp1[matches[i].queryIdx].pt);
+	img2_pts.push_back(kp2[matches[i].trainIdx].pt);
+    }
+
+    // Triangulate points.
+    // Same camera for both views.
+    cv::triangulatePoints(camera_proj, camera_proj, img1_pts, img2_pts, homo_pts);
+    
+    // Convert to inhomogeneous points.
+    // Transpose because we need N x 4, not 4 x N.
+    cv::convertPointsFromHomogeneous(homo_pts.t(), inhomo_pts);
+
+    return inhomo_pts;
 }
