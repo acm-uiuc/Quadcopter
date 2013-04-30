@@ -7,19 +7,18 @@ MOPSExtractor::MOPSExtractor()
 Mat getDescriptorPoints(const ImgPyr& pyr, KeyPoint kp)
 {
     Mat image = pyr.img_;
-    int x = kp.pt.x, y = kp.pt.y;
-    //if (pyr.adj_ != 0) {
-    //	x = (float)x/pyr.adj_;
-    //	y = (float)y/pyr.adj_;
-    //}
-
     float theta = kp.angle;
+    int x = kp.pt.x, y = kp.pt.y;
+
+    if (pyr.adj_ != 0) {
+    	x = (float)x/pyr.adj_;
+    	y = (float)y/pyr.adj_;
+    }
 
     Size2f size(DESCRIPTORSIZE,DESCRIPTORSIZE);
     RotatedRect roi(Point(x,y),size,theta*180/M_PI);
     Point2f vert[4];
     roi.points(vert);
-
     for (int i = 0; i < 4; i++) {
 	if (vert[i].x < 0 || vert[i].y < 0)
 	    return Mat();
@@ -28,7 +27,6 @@ Mat getDescriptorPoints(const ImgPyr& pyr, KeyPoint kp)
     }
 
     Rect rect = roi.boundingRect();
-
     if (rect.x < 0 || rect.y < 0)
 	return Mat();
     if ((rect.x + rect.width) >= image.cols)
