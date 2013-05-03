@@ -46,18 +46,71 @@
 %
 
 \begin{frame}
-\title{Placeholder}
+\title{Obstacle Avoidance for a Quadrotor}
 %\subtitle{ }
 \author{Nikoli Dryden \and Bryan Plummer}
 \date{}
 \titlepage
-
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}
-  \frametitle{Placeholder}
+  \frametitle{Introduction}
+  \begin{itemize}
+  \item Obstacle avoidance for an ARDrone 2.0 quadrotor
+  \item Use the approach in \emph{Obstacle avoidance for small UAVs using monocular vision} (Lee et al. 2011)
+  \item Test with real data as opposed to simulations
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Proposed Solution}
+  \begin{itemize}
+  \item Extract SIFT and MOPS features from two images
+  \item Match SIFT and MOPS features in images to locate points in 3D
+  \item Use MOPS to get object outlines
+  \item Use SIFT to get internal object structure
+  \item Determine type of object
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{MOPS}
+  \begin{itemize}
+  \item Multi-Scale Oriented Patches (\emph{Image Matching using Multi-Scale Oriented Patches} (Brown et al. 2004))
+  \item TODO: Include sample image
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Some Results: SIFT}
+  Example of SIFT matches on data
+\end{frame}
+
+\begin{frame}
+  \frametitle{Some Results: MOPS}
+  Example of MOPS matches on data
+\end{frame}
+
+\begin{frame}
+  \frametitle{Some Results}
+  Discuss how MOPS doesn't work well and the paper isn't robust
+\end{frame}
+
+\begin{frame}
+  \frametitle{A Better Idea}
+  Discuss idea of using SIFT features on contours
+\end{frame}
+
+\begin{frame}
+  \frametitle{Further Results}
+  
+\end{frame}
+
+\begin{frame}
+  \frametitle{Conclusions}
+  
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
