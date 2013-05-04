@@ -1,4 +1,5 @@
 #include "MOPSExtractor.h"
+#include "Utils.h"
 
 MOPSExtractor::MOPSExtractor()
 {
@@ -16,31 +17,24 @@ Mat getDescriptorPoints(const ImgPyr& pyr, KeyPoint kp)
     }
 
     Size2f size(DESCRIPTORSIZE,DESCRIPTORSIZE);
-    RotatedRect roi(Point(x,y),size,theta*180/M_PI);
-    Point2f vert[4];
-    roi.points(vert);
-    for (int i = 0; i < 4; i++) {
-	if (vert[i].x < 0 || vert[i].y < 0)
-	    return Mat();
-	if (vert[i].x >= image.cols || vert[i].y >= image.rows)
-	    return Mat();
-    }
-
+    RotatedRect roi(Point(x,y),size,theta);
     Rect rect = roi.boundingRect();
-    if (rect.x < 0 || rect.y < 0)
-	return Mat();
-    if ((rect.x + rect.width) >= image.cols)
-	return Mat();
-    if ((rect.y + rect.height) >= image.rows)
-	return Mat();
-
+    if (rect.x == -1) {
+	rect.x = 0; rect.width+1;
+	roi.center.x+1;
+    }
+    if (rect.y == -1) {
+	rect.y = 0; rect.height+1;
+	roi.center.y+1;
+    }
+    assert(isRectWithinImage(image,rect));
     Mat patch = image(rect);
 
     Mat M, rotated, cropped;
     float angle = roi.angle;
     Size rect_size = roi.size;
 
-    theta = theta*180/M_PI;
+    theta = theta;
     if (theta < -45.) {
 	angle += 90.0;
 	swap(rect_size.width, rect_size.height);
@@ -59,12 +53,10 @@ void MOPSExtractor::compute(const vector<ImgPyr>& imgPyr,
     int descLength = 64;
     descriptors = Mat(keypoints.size(),descLength,CV_32F);
     for (int i = 0; i < keypoints.size(); i++) {
-	cout << keypoints[i].octave << endl;
+	//cout << keypoints[i].octave << endl;
 	Mat patch = getDescriptorPoints(imgPyr[keypoints[i].octave],
 					keypoints[i]);
-
 	assert(patch.rows == DESCRIPTORSIZE && patch.cols == DESCRIPTORSIZE);
-
 	Scalar mean, std;
 	meanStdDev(patch,mean,std);
 	
@@ -79,5 +71,7 @@ void MOPSExtractor::compute(const vector<ImgPyr>& imgPyr,
 
 	assert(dIdx == descLength);
     }
+
+    cout << "EXTRACTING DONE" << endl;
 }
 

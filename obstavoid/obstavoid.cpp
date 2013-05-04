@@ -107,8 +107,9 @@ void* sift_match(void* _imgs) {
 void* mops_match(void* _imgs) {
     printf("MOPS hello!\n");
     img2_t* imgs = (img2_t*) _imgs;
-    int nUpLevels = 0, nDnLevels = 1;
-    MOPSFeatures feats(nUpLevels,nDnLevels);
+    int nUpLevels = 0, nDnLevels = 1, nKeyPoints = 30;
+    float cRobust = 0.9;
+    MOPSFeatures feats(nUpLevels,nDnLevels,nKeyPoints,cRobust);
     cv::FlannBasedMatcher matcher;
     std::vector<cv::KeyPoint> kp1;
     std::vector<cv::KeyPoint> kp2;

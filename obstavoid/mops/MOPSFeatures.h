@@ -8,15 +8,17 @@
 class MOPSFeatures
 {
  public:
-    MOPSFeatures(int nUpLevels,int nDnLevels);
+    MOPSFeatures(int nUpLevels, int nDnLevels, int nKeyPoints, float cRobust);
     void getFeatures(const Mat& image, vector<KeyPoint>& keypoints, Mat& desc);
     void drawMOPSKeypoints(const Mat& image, 
 			   vector<KeyPoint>& keypoints, 
+			   vector<ImgPyr>& imgPyr,
 			   Mat& outImg);
  protected:
     void getImagePyrimid(Mat& image, vector<ImgPyr>& imgPyr);
 
-    int nUpLevels_, nDnLevels_;
+    int nUpLevels_, nDnLevels_, nKeyPoints_;
+    float cRobust_;
 };
 
 #endif

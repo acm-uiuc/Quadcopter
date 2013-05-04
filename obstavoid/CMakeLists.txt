@@ -7,6 +7,7 @@ find_package(OpenCV REQUIRED)
 #link_directories("/home/ndryden/lib")
 
 set(obstavoid_components mops
+                         contours
                          #anymore components
 			 )
 

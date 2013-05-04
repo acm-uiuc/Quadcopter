@@ -1,10 +1,6 @@
-#include "MOPSFeatures.h"
-#include "opencv2/core/core.hpp"
-#include "opencv2/features2d/features2d.hpp"
-#include "opencv2/highgui/highgui.hpp"
-#include "opencv2/nonfree/features2d.hpp"
+#include "ContourKeypoints.h"
 
-bool getDescriptors(string fileName, vector<KeyPoint>& keypoints, Mat& desc)
+bool getDescriptors(string fileName, vector<KeyPoint>& keypoints)
 {
     cout << "Loading image: " << fileName << endl;
 
@@ -14,19 +10,15 @@ bool getDescriptors(string fileName, vector<KeyPoint>& keypoints, Mat& desc)
 	return false;
     }
 
-    Mat image_gray;
+    Mat image_gray, outImg;
     cvtColor(image,image_gray,CV_BGR2GRAY);
+    int thresh = 75, stepSize = 10;
+    ContourKeypoints contours(thresh,stepSize);
+    contours.detect(image_gray,keypoints);
     
-    int nUpLevels = 1, nDnLevels = 1, nKeyPoints = 50;
-    float cRobust = 0.9;
-    MOPSFeatures feats(nUpLevels,nDnLevels,nKeyPoints,cRobust);
-    feats.getFeatures(image_gray,keypoints,desc);
-
-    Mat outImg = image.clone(), outImg2;
-    //feats.drawMOPSKeypoints(image,keypoints,outImg);
-    drawKeypoints(image,keypoints,outImg2);
+    drawKeypoints(image,keypoints,outImg);
     
-    imshow("Image Keypoints2",outImg2);
+    imshow("Image Keypoints2",outImg);
     //imwrite("mops.jpg",outImg);
     waitKey(0);
     return true;
@@ -43,9 +35,9 @@ int main(int argc, char** argv)
     string fileName2(argv[2]);
     Mat desc1, desc2;
     vector<KeyPoint> keypoints1, keypoints2;
-    if (!getDescriptors(fileName1,keypoints1,desc1))
+    if (!getDescriptors(fileName1,keypoints1))
 	return -1;
-    if (!getDescriptors(fileName2,keypoints2,desc2))
+    if (!getDescriptors(fileName2,keypoints2))
 	return -1;
     
     BFMatcher matcher(NORM_L2);
