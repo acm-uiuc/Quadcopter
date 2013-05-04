@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 2.6)
 project(obstavoid)
 
 find_package(OpenCV REQUIRED)
+find_package(PCL REQUIRED)
 #include_directories("/home/ndryden/include")
 #link_directories("/home/ndryden/lib")
 
@@ -15,7 +16,7 @@ foreach(DIR ${obstavoid_components})
                          ${PROJECT_SOURCE_DIR}/${DIR})
 endforeach()
 
-include_directories(${obstavoid_src_dirs}
+include_directories(${obstavoid_src_dirs} ${PCL_INCLUDE_DIRS}
                      )
 
 foreach(obstavoid_lib_name ${obstavoid_components})
@@ -26,4 +27,4 @@ endforeach()
 set(EXE_NAME test)
 add_executable(${EXE_NAME} obstavoid.cpp main.cpp)
 #target_link_libraries(${EXE_NAME} opencv_core opencv_features2d opencv_highgui opencv_nonfree ${obstavoid_libs})
-target_link_libraries(${EXE_NAME} ${OpenCV_LIBRARIES} ${obstavoid_libs})
+target_link_libraries(${EXE_NAME} ${OpenCV_LIBRARIES} ${PCL_LIBRARIES} gcrypt ${obstavoid_libs})
