@@ -91,7 +91,7 @@ The locations of MOPS features indicate the corners of objects in the world. The
 \begin{figure*}[h]
   \centering
   \includegraphics[resolution=150, scale=0.5]{images/lee-sift-mops-example}
-  \caption{Example output for SIFT and MOPS features.}
+  \caption{Example output for combined SIFT and MOPS features.}
   \label{fig:lee-sift-mops}
 \end{figure*}
 
@@ -121,10 +121,10 @@ This comparison allows us to determine what sort of obstacle an object is and to
 
 \subsection{Replacing MOPS with Contours}
 After finding object outlines using MOPS features to not give an insufficient amount of information, we sought an 
-alternative approach.  As~\cite{suzuki1985} has been widely tested it appeared to be sufficient to meet our needs.  
-As this algorithm operates on a binary image, we performed this conversion using the Canny Edge Detector~\cite{canny1986}.
-We then could mark the key points found using the SIFT algorithm as belonging to an object outline and proceed as normal 
-through the rest of the approach of~\cite{lee2011} as normal.
+alternative approach.  As~\cite{suzuki1985} has been widely tested and locates contours within an image it appeared to be 
+sufficient to meet our needs. We used the Canny Edge Detector~\cite{canny1986} to convert to binary images as the input to
+this method.  After locating the contours in an image we marked the key points found using the SIFT algorithm as 
+belonging to an object outline and proceeded as normal through the rest of the approach of~\cite{lee2011} as normal.
 
 \subsection{Integrating PTAM}
 Integrating PTAM with the quadrotor is remarkably simple. We made use of two different methods to accomplish this, in order to have different features available. Both methods rely upon the Robot Operating System (ROS) *** CITE ROS *** for support and the ardrone\_autonomy *** CITE ardrone\_autonomy *** driver for communication with the quadrotor.
