@@ -73,7 +73,7 @@ has only been evaluated on theoretical data.  The authors note that in some case
 intend to evaluate and extend their work to ascertain the extent this kind of information is beneficial to navigation.
 
 \section{Approach}
-We begin by describing our implementation of the approach in~\cite{lee2011}. Subsequently, we describe our integration of the PTAM system with the quadrotor.
+We begin by describing our implementation of the approach in~\cite{lee2011}. Subsequently, we introduce a variation we attempted to generate an improved 3D map than we obtained using the unmodified version of~\cite{lee2011}.  Lastly, we describe our integration of the PTAM system with the quadrotor.
 
 \subsection{Lee et al.'s Method}
 Our approach closely follows that in~\cite{lee2011}. The goal is to make use of MOPS features to limit the number of SIFT features necessary for computing structural information about obstacles. We begin by assuming that we have, as input, two images taken from the quadrotor's forward-facing camera, that the images are of the same scene, and contain corresponding features. For our purposes, we need only a greyscale image and so discard the colour information.
@@ -118,6 +118,13 @@ $T_1$ should be set such that there is a high probabilitiy that the SIFT and MOP
 In the third case, we repeat the above process feature points on an object behind the open space.
 
 This comparison allows us to determine what sort of obstacle an object is and to locate where in the world the objects exist, relative to the quadrotor.
+
+\subsection{Replacing MOPS with Contours}
+After finding object outlines using MOPS features to not give an insufficient amount of information, we sought an 
+alternative approach.  As~\cite{suzuki1985} has been widely tested it appeared to be sufficient to meet our needs.  
+As this algorithm operates on a binary image, we performed this conversion using the Canny Edge Detector~\cite{canny1986}.
+We then could mark the key points found using the SIFT algorithm as belonging to an object outline and proceed as normal 
+through the rest of the approach of~\cite{lee2011} as normal.
 
 \subsection{Integrating PTAM}
 Integrating PTAM with the quadrotor is remarkably simple. We made use of two different methods to accomplish this, in order to have different features available. Both methods rely upon the Robot Operating System (ROS) *** CITE ROS *** for support and the ardrone\_autonomy *** CITE ardrone\_autonomy *** driver for communication with the quadrotor.
