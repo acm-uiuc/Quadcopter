@@ -86,7 +86,14 @@ These matches are then used to determine the location of the detected feature po
 
 In our implementation, the above steps involving SIFT and MOPS are implemented in parallel using the standard pthreads *** CITE pthreads? *** library. Since to this point there are no interactions between the SIFT and MOPS features and the input images are constant, the operations are independent. We thus run each in a separate thread in order to maximize performance.
 
-The locations of MOPS features indicate the corners of objects in the world. The orientation of the descriptors is used to extract the outlines of objects to obtain edge spatial information. However, this does not provide information on the internal structure of the object; we use the SIFT features to achieve this. We consider SIFT features within the outlines constructed by MOPS features, which provide information on the internal structure of the objects: the distance to the points will indicate the type and extent of the object.
+The locations of MOPS features indicate the corners of objects in the world. The orientation of the descriptors is used to extract the outlines of objects to obtain edge spatial information. However, this does not provide information on the internal structure of the object; we use the SIFT features to achieve this. We consider SIFT features within the outlines constructed by MOPS features, which provide information on the internal structure of the objects: the distance to the points will indicate the type and extent of the object. An example of merged SIFT and MOPS features from~\cite{lee2011} is provided in Figure~\ref{fig:lee-sift-mops}.
+
+\begin{figure*}[h]
+  \centering
+  \includegraphics[resolution=150, scale=0.5]{images/lee-sift-mops-example}
+  \caption{Example output for SIFT and MOPS features.}
+  \label{fig:lee-sift-mops}
+\end{figure*}
 
 We now determine the ``type'' of the object, based on comparison of the distance of SIFT features within an outline to the distance to MOPS features on the outline. Define $D_M$ to be the distance to a MOPS feature, and $D_S$ to be the distance to a SIFT feature within the outline. Let $T_1$ and $T_2$ be two threshold values. We have the following equations
 \begin{equation}
