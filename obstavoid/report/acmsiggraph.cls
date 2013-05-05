@@ -85,7 +85,7 @@
 % required packages.
 
 \RequirePackage{amsmath}
-\RequirePackage{lineno}
+%\RequirePackage{lineno}
 \RequirePackage[scaled=.92]{helvet}
 \RequirePackage{times}
 \RequirePackage{graphicx}

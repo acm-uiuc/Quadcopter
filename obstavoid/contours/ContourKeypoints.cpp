@@ -32,10 +32,14 @@ void ContourKeypoints::detect(const Mat& image, vector<KeyPoint>& keypoints)
 	sort(points.begin(),points.end(),ltPoint);
 
 	for (int j = 0; j < points.size(); j++) {
-	    float sqdiffx = pow(keypoints.back().pt.x - points[j].x,2);
-	    float sqdiffy = pow(keypoints.back().pt.y - points[j].y,2);
-	    if ((sqdiffx + sqdiffy) > stepSize_)
+	    if (keypoints.empty())
 		keypoints.push_back(KeyPoint(points[j],1));
+	    else {
+		float sqdiffx = pow(keypoints.back().pt.x - points[j].x,2);
+		float sqdiffy = pow(keypoints.back().pt.y - points[j].y,2);
+		if ((sqdiffx + sqdiffy) > stepSize_)
+		    keypoints.push_back(KeyPoint(points[j],32));
+	    }
 	}
     }
 

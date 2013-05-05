@@ -1,8 +1,8 @@
-#ifndef MOPS_COMMON__H_
-#define MOPS_COMMON__H_
+#ifndef CONTOURS_COMMON__H_
+#define CONTOURS_COMMON__H_
 
-#include <opencv/cv.h>
-#include <opencv/highgui.h>
+#include <opencv2/nonfree/features2d.hpp>
+#include <opencv2/opencv.hpp>
 
 #include <vector>
 #include <string.h>
