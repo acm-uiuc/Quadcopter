@@ -37,7 +37,7 @@ void removeDuplicates(vector<KeyPoint>& keypoints)
 }
 
 MOPSDetector::MOPSDetector(float cRobust, int nKeyPoints) 
-  : anms(cRobust,nKeyPoints)
+    : anms(cRobust,nKeyPoints)
 {  
 }
 
@@ -145,7 +145,7 @@ void MOPSDetector::detect(vector<ImgPyr>& imgPyr, vector<KeyPoint>& keypoints)
     vector<Mat> grad_x(imgPyr.size());
     vector<Mat> grad_y(imgPyr.size());
     int nRows = imgPyr[0].img_.rows, nCols = imgPyr[0].img_.cols;
-    double thresh = 150;
+    double thresh = 70;
     for (int i = 0; i < imgPyr.size(); i++) {
 	int blockSize = 2;
 	int apertureSize = 3;
@@ -171,6 +171,17 @@ void MOPSDetector::detect(vector<ImgPyr>& imgPyr, vector<KeyPoint>& keypoints)
 			if( (int) corners[i].at<float>(y,x) > thresh )
 			    {
 				circle( dst_norm_scaled, Point( x, y ), 5,  Scalar(0), 2, 8, 0 );
+				double theta = getOrientation(grad_x[i],grad_y[i],x,y);
+				Size2f size(DESCRIPTORSIZE,DESCRIPTORSIZE);
+				RotatedRect roi(Point(x,y),size,theta);
+				if (isRectWithinImage(imgPyr[i].img_,roi.boundingRect())) {
+				    float adjx = x, adjy = y;
+				    if (imgPyr[i].adj_ != 0) {
+					adjx = (float) x*imgPyr[i].adj_;
+					adjy = (float) y*imgPyr[i].adj_;
+				    }
+				    keypoints.push_back(KeyPoint(Point2f(adjx,adjy),i,theta,corners[i].at<float>(y,x),i));
+				}
 			    }
 		    }
 	    }
@@ -197,8 +208,8 @@ void MOPSDetector::detect(vector<ImgPyr>& imgPyr, vector<KeyPoint>& keypoints)
 			cntr.x = (float) cntr.x*imgPyr[octave].adj_;
 			cntr.y = (float) cntr.y*imgPyr[octave].adj_;
 		    }
-		    keypoints.push_back(KeyPoint(cntr,octave,theta,response,
-						 octave));
+		    //keypoints.push_back(KeyPoint(cntr,octave,theta,response,
+		    //				 octave));
 		}
 		    
 	    }
@@ -212,56 +223,56 @@ void MOPSDetector::detect(vector<ImgPyr>& imgPyr, vector<KeyPoint>& keypoints)
 
 
 /*
-void MOPSDetector::detect(vector<ImgPyr>& imgPyr, vector<KeyPoint>& keypoints)
-{
-    int scale = 1;
-    int delta = 0;
-    int ddepth = CV_16S;
+  void MOPSDetector::detect(vector<ImgPyr>& imgPyr, vector<KeyPoint>& keypoints)
+  {
+  int scale = 1;
+  int delta = 0;
+  int ddepth = CV_16S;
 
-    vector<Mat> corners(imgPyr.size());
-    vector<Mat> grad_x(imgPyr.size());
-    vector<Mat> grad_y(imgPyr.size());
-    for (int i = 0; i < imgPyr.size(); i++) {
-	int blockSize = 2;
-	int apertureSize = 3;
-	double k = 0.04;
-	int thresh = 93;
-	Mat dst_h, dst_norm, dst_norm_scaled, filtered;
+  vector<Mat> corners(imgPyr.size());
+  vector<Mat> grad_x(imgPyr.size());
+  vector<Mat> grad_y(imgPyr.size());
+  for (int i = 0; i < imgPyr.size(); i++) {
+  int blockSize = 2;
+  int apertureSize = 3;
+  double k = 0.04;
+  int thresh = 93;
+  Mat dst_h, dst_norm, dst_norm_scaled, filtered;
 
-	/// Detecting corners
-	cornerHarris(imgPyr[i].img_, dst_h, blockSize, apertureSize, k, BORDER_DEFAULT );
+  /// Detecting corners
+  cornerHarris(imgPyr[i].img_, dst_h, blockSize, apertureSize, k, BORDER_DEFAULT );
 
-	/// Normalizing
-	normalize(dst_h,dst_norm,0,255,NORM_MINMAX,CV_32FC1,Mat());
-	convertScaleAbs( dst_norm, dst_norm_scaled );
-	GaussianBlur(imgPyr[i].img_,filtered,Size(5,5),4.5);
-	Mat grad_x, grad_y;
+  /// Normalizing
+  normalize(dst_h,dst_norm,0,255,NORM_MINMAX,CV_32FC1,Mat());
+  convertScaleAbs( dst_norm, dst_norm_scaled );
+  GaussianBlur(imgPyr[i].img_,filtered,Size(5,5),4.5);
+  Mat grad_x, grad_y;
 
-	Sobel(filtered,grad_x,ddepth,1,0,3,scale,delta,BORDER_DEFAULT);
-	Sobel(filtered,grad_y,ddepth,0,1,3,scale,delta,BORDER_DEFAULT);
+  Sobel(filtered,grad_x,ddepth,1,0,3,scale,delta,BORDER_DEFAULT);
+  Sobel(filtered,grad_y,ddepth,0,1,3,scale,delta,BORDER_DEFAULT);
 
-	for (int y = 0; y < dst_norm.rows; y++) { 
-	    for (int x = 0; x < dst_norm.cols; x++) {
-		float response = dst_norm.at<float>(x,y);
-		if ((int) response > thresh) {
-		     double theta = getOrientation(grad_x,grad_y,x,y);
-		     Size2f size(DESCRIPTORSIZE,DESCRIPTORSIZE);
-		     RotatedRect roi(Point(x,y),size,theta*180/M_PI);
-		     if (isRectWithinImage(imgPyr[i].img_,roi.boundingRect())) {
-			Point2f cntr(x,y);
-			if (imgPyr[i].adj_ != 0) {
-			    cntr.x *= imgPyr[i].adj_;
-			    cntr.y *= imgPyr[i].adj_;
-			}
-			keypoints.push_back(KeyPoint(cntr,i,theta*180/M_PI,
-						     response,i));
-		     }
+  for (int y = 0; y < dst_norm.rows; y++) { 
+  for (int x = 0; x < dst_norm.cols; x++) {
+  float response = dst_norm.at<float>(x,y);
+  if ((int) response > thresh) {
+  double theta = getOrientation(grad_x,grad_y,x,y);
+  Size2f size(DESCRIPTORSIZE,DESCRIPTORSIZE);
+  RotatedRect roi(Point(x,y),size,theta*180/M_PI);
+  if (isRectWithinImage(imgPyr[i].img_,roi.boundingRect())) {
+  Point2f cntr(x,y);
+  if (imgPyr[i].adj_ != 0) {
+  cntr.x *= imgPyr[i].adj_;
+  cntr.y *= imgPyr[i].adj_;
+  }
+  keypoints.push_back(KeyPoint(cntr,i,theta*180/M_PI,
+  response,i));
+  }
 		    
-		}
-	    }
-	}
-    }
+  }
+  }
+  }
+  }
 
-    //removeDuplicates(keypoints);
-    anms.doANMS(keypoints);
-}*/
+  //removeDuplicates(keypoints);
+  anms.doANMS(keypoints);
+  }*/

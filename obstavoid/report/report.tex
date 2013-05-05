@@ -24,7 +24,7 @@ We implement and evaluate the approach of~\cite{lee2011} for obstacle avoidance 
 \end{abstract}
 
 \section{Introduction}
-Micro aerial vehicles (MAV's) which include quadrotor and unmanned aerial vehicles (UAV's) have the potential to become more 
+Micro aerial vehicles(MAV's), which include quadrotor and unmanned aerial vehicles(UAV's), have the potential to become more 
 prominent over the next several years.  These aircraft allow easy access for many places which are difficult for humans 
 to go in a safer manner for both humans and the environment and have applications reaching into search and rescue, tracking,
 mapping, and others.  In order for the higher level tasks to be handled these vehicles must have a reliable 
@@ -43,15 +43,15 @@ approach increased by about 15 times with only an increase from 8 to 35 feature 
 scene can number in the hundreds or thousands.
 
 As an attempt to solve this problem~\cite{lee2011} proposed an approach to reduce the number of points required to 
-represent the 3D structure of a scene.  The authors used multiscale oriented patches (MOPS)~\cite{BSW05} to create outlines of 
+represent the 3D structure of a scene.  The authors used multiscale oriented patches(MOPS)~\cite{BSW05} to create outlines of 
 objects.  Since the outlines themselves are unable to tell if an outline is empty or not, they used the 3D location of SIFT 
 features~\cite{lowe2004} located within the outlines to obtain this information.  
 
 Although the proposed method cited collision avoidance for a quadrotor as its intended application, the authors did not 
 dispense any data on its effectiveness in real scenes from images taken using a quadrotor.  This paper provides just such an 
-evaluation using images taken from the AR-Drone 2.0 quadrotor with the processing being performed on a laptop connecting 
-to the quadrotor using a wireless network. In addition, we evaluate the use of the parallel tracking and mapping (PTAM)
-~\cite{klein07parallel} approach that was adapted as an online solution for quadrotors in~\cite{weiss2011}.
+evaluation using images taken from the AR-Drone 2.0 quadrotor with the processing being performed on a laptop obtaining the 
+images from the quadrotor through a wireless network. In addition, we evaluate the use of the parallel tracking and 
+mapping(PTAM)~\cite{klein07parallel} approach that was adapted as an online solution for quadrotors in~\cite{weiss2011}.
 
 \section{Related Work}
 Due to weight and energy restrictions aboard MAV's a vision based approach is seen as one of the most viable navigation 
@@ -63,14 +63,14 @@ environments.
 Another common approach in the literature uses optical flow to estimate the relative motion between the frames of a camera.
 In these systems one is able to detect collisions by measuring the relative rate of expansion of objects.  This method 
 behaves poorly when light intensity doesn't remain constant~\cite{horn1981} and tends to be sensitive to noise and
-an unstable camera.  As all MAV's will contribute to some vibrations in the camera, this leads to inaccurate estimates in
+an unstable camera.  As all MAV's will contribute to some vibrations in the camera this leads to inaccurate estimates in
 flow vectors.
 
 Some recent work attempts to use image segmentation to identify an obstacle and build a dense map around it~\cite{ha2012}.  
 This approach shares some motivations as the first method attempted in this work in that it attempts to reduce the number
-of computations required for navigation by using a limited number of feature points.  As with~\cite{lee2011}, the approach
-has only be evaluated in theory.  The authors note that in some cases image segmentation is not possible and intend to 
-evaluate and extend their work to ascertain any benefits it may have.
+of computations required for navigation by using a limited number of feature points.  As with~\cite{lee2011}, this approach
+has only been evaluated on theoretical data.  The authors note that in some cases image segmentation is not possible and 
+intend to evaluate and extend their work to ascertain the extent this kind of information is beneficial to navigation.
 
 \section{Approach}
 We begin by describing our implementation of the approach in~\cite{lee2011}. Subsequently, we describe our integration of the PTAM system with the quadrotor.

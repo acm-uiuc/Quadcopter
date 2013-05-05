@@ -51,7 +51,8 @@ void ContourKeypoints::detect(const Mat& image, vector<KeyPoint>& keypoints)
 	    drawContours(drawing,contours,i,color,2,8,hierarchy,0,Point());
     }
     imshow("frame",image);
-    imshow("Contours", drawing);
+    imshow("Contours",drawing);
+    imwrite("contours0.jpg",drawing);
     waitKey(0);
 }
 

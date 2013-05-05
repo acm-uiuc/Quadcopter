@@ -17,7 +17,7 @@ bool getDescriptors(string fileName, vector<KeyPoint>& keypoints, Mat& desc)
     Mat image_gray;
     cvtColor(image,image_gray,CV_BGR2GRAY);
     
-    int nUpLevels = 1, nDnLevels = 1, nKeyPoints = 50;
+    int nUpLevels = 0, nDnLevels = 1, nKeyPoints = 50;
     float cRobust = 0.9;
     MOPSFeatures feats(nUpLevels,nDnLevels,nKeyPoints,cRobust);
     feats.getFeatures(image_gray,keypoints,desc);
@@ -27,7 +27,7 @@ bool getDescriptors(string fileName, vector<KeyPoint>& keypoints, Mat& desc)
     drawKeypoints(image,keypoints,outImg2);
     
     imshow("Image Keypoints2",outImg2);
-    //imwrite("mops.jpg",outImg);
+    imwrite("mops.jpg",outImg2);
     waitKey(0);
     return true;
 }
@@ -59,6 +59,7 @@ int main(int argc, char** argv)
     Mat img2 = imread(fileName2);
     drawMatches(img1, keypoints1, img2, keypoints2, matches, img_matches);
     imshow("matches", img_matches);
+    imwrite("matches.jpg",img_matches);
     waitKey(0);
     return 0;
 }

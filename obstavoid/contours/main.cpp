@@ -17,12 +17,12 @@ bool getDescriptors(string fileName, vector<KeyPoint>& keypoints, Mat& desc)
     ContourKeypoints contours(thresh,stepSize);
     contours.detect(image_gray,keypoints1);
  
-    for (int i = 0; i < 5; i++)
-	keypoints.push_back(keypoints1[i*100]);
+    for (int i = 0; i < 100; i++)
+	keypoints.push_back(keypoints1[i*7]);
     
     drawKeypoints(image,keypoints,outImg);
     imshow("Image Keypoints2",outImg);
-    //imwrite("mops.jpg",outImg);
+    imwrite("contoursKP0.jpg",outImg);
     waitKey(0);
     return true;
 }
@@ -60,6 +60,7 @@ int main(int argc, char** argv)
     
     drawMatches(img1, keypoints1, img2, keypoints2, matches, img_matches);
     imshow("matches", img_matches);
+    imwrite("matchescontours00-04.jpg",img_matches);
     waitKey(0);
     return 0;
 }
