@@ -73,12 +73,55 @@ has only be evaluated in theory.  The authors note that in some cases image segm
 evaluate and extend their work to ascertain any benefits it may have.
 
 \section{Approach}
+We begin by describing our implementation of the approach in~\cite{lee2011}. Subsequently, we describe our integration of the PTAM system with the quadrotor.
+
+\subsection{Lee et al.'s Method}
+Our approach closely follows that in~\cite{lee2011}. The goal is to make use of MOPS features to limit the number of SIFT features necessary for computing structural information about obstacles. We begin by assuming that we have, as input, two images taken from the quadrotor's forward-facing camera, that the images are of the same scene, and contain corresponding features. Each image from the camera is a $640 \times 360$ pixel colour image; for our purposes, we need only a greyscale image and so discard the colour information.
+
+In each image, we compute MOPS descriptors~\cite{BSW05}. The descriptors are located at features detected by a multi-scale Harris corner detector. Each descriptor is an $8 \times 8$ patch of bias/gain normalized intensity values and is oriented using a blurred local gradient. Feature density is controlled using an adaptive non-maximal suppression algorithm. SIFT descriptors~\cite{lowe2004} are also computed, using the OpenCV computer vision library *** CITE OpenCV ***.
+
+Descriptors in these two images are then matched in order to generate putative matches. For MOPS, matching is performed using a brute-force matcher, since existing $k$-d tree implementations in OpenCV do not support efficient dynamic modification after creation. SIFT features are matched using OpenCV's FLANN fast approximate nearest-neighbour~\cite{flann2009} matcher.
+
+These matches are then used to determine the location of the detected feature points in three-dimensional space via triangulation. Our approach to triangulation is based on the one implemented in PTAM *** CITE PTAM code ***. A homography is first computed between matching points. This homography is then decomposed into rotation and translation matrices~\cite{inria2007} which are used to determine a projection matrix. This is used to triangulate points as usual.
+
+In our implementation, the above steps involving SIFT and MOPS are implemented in parallel using the standard pthreads *** CITE pthreads? *** library. Since to this point there are no interactions between the SIFT and MOPS features and the input images are constant, the operations are independent. We thus run each in a separate thread in order to maximize performance.
+
+The locations of MOPS features indicate the corners of objects in the world. The orientation of the descriptors is used to extract the outlines of objects to obtain edge spatial information. However, this does not provide information on the internal structure of the object; we use the SIFT features to achieve this. We consider SIFT features within the outlines constructed by MOPS features, which provide information on the internal structure of the objects: the distance to the points will indicate the type and extent of the object.
+
+We now determine the ``type'' of the object, based on comparison of the distance of SIFT features within an outline to the distance to MOPS features on the outline. Define $D_M$ to be the distance to a MOPS feature, and $D_S$ to be the distance to a SIFT feature within the outline. Let $T_1$ and $T_2$ be two threshold values. We have the following equations
+\begin{equation}
+  \label{eq:dist1}
+  | D_M - D_S | \leq T_1
+\end{equation}
+\begin{equation}
+  \label{eq:dist2}
+  T_1 < | D_M - D_S | \leq T_2
+\end{equation}
+\begin{equation}
+  \label{eq:dist3}
+  T_2 < | D_M - D_S |
+\end{equation}
+
+$T_1$ should be set such that there is a high probabilitiy that the SIFT and MOPS features are on the same object, and $T_2$ such that there is a high probability that the features are on different objects. We thus have the following cases:
+\begin{itemize}
+\item Equation~\ref{eq:dist1} is the case of an object with a closed interior.
+\item Equation~\ref{eq:dist2} is again the case where an object has a closed interior, but possibly with a convex shape.
+\item Equation~\ref{eq:dist3} is the case of an object with an open interior.
+\end{itemize}
+In the third case, we repeat the above process feature points on an object behind the open space.
+
+This comparison allows us to determine what sort of obstacle an object is and to locate where in the world the objects exist, relative to the quadrotor.
+
+\subsection{Integrating PTAM}
 
 
 \section{Experiments}
 
 
 \section{Analysis}
+
+
+\section{Individual Contributions}
 
 
 \bibliographystyle{acmsiggraph}
