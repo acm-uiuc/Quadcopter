@@ -120,7 +120,11 @@ In the third case, we repeat the above process feature points on an object behin
 This comparison allows us to determine what sort of obstacle an object is and to locate where in the world the objects exist, relative to the quadrotor.
 
 \subsection{Integrating PTAM}
+Integrating PTAM with the quadrotor is remarkably simple. We made use of two different methods to accomplish this, in order to have different features available. Both methods rely upon the Robot Operating System (ROS) *** CITE ROS *** for support and the ardrone\_autonomy *** CITE ardrone\_autonomy *** driver for communication with the quadrotor.
 
+Our first approach is to directly test PTAM on data from the quadrotor. For this, we made use of the ethzasl\_ptam package *** CITE ethzasl\_ptam ***, which integrates PTAM with ROS. It was then only a matter of converting the camera stream from the ardrone\_autonomy driver to the requisite format for use with PTAM and calibrating the camera appropriately.
+
+Secondly, we made use of the tum\_ardrone *** CITE tum\_ardrone *** package for ROS, which integrates a version of PTAM with an extended Kalman filter for data fusion and state estimation and a system for generating steering commands for the quadrotor. tum\_ardrone builds upon PTAM to provide an environment specifically designed for use with the ARDrone and ARDrone 2, and in addition to obstacle detection, provides a system for navigation and auto-pilot.
 
 \section{Experiments}
 
