@@ -84,33 +84,46 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{Some Results: SIFT}
-  Example of SIFT matches on data
-\end{frame}
-
-\begin{frame}
-  \frametitle{Some Results: MOPS}
-  Example of MOPS matches on data
-\end{frame}
-
-\begin{frame}
   \frametitle{Some Results}
-  Discuss how MOPS doesn't work well and the paper isn't robust
+  \begin{itemize}
+  \item MOPS is not robust on real data:
+    \begin{itemize}
+    \item Poor keypoints (multi-scale Harris)
+    \item Poor matches
+    \item Computationally intensive
+    \end{itemize}
+  \item SIFT is also relatively slow
+  \item Do not have sufficient ``good'' matches to generate object outlines
+  \item Lee et al. approach is not robust on real-world data
+  \end{itemize}
 \end{frame}
 
 \begin{frame}
   \frametitle{A Better Idea}
-  Discuss idea of using SIFT features on contours
+  \begin{itemize}
+  \item Use faster and more robust features than SIFT and MOPS while still having sparity
+  \item PTAM
+    \begin{itemize}
+    \item An existing monocular SLAM framework using FAST (and other) features
+    \item Robust enough to work with real-world indoor and outdoor data
+    \item Significantly faster than our approach
+    \end{itemize}
+  \item Integrate with the quadcopter using ardrone\_autonomy and tum\_ardrone
+  \end{itemize}
 \end{frame}
 
 \begin{frame}
   \frametitle{Further Results}
-  
+  TODO: Images/video from flight
 \end{frame}
 
 \begin{frame}
   \frametitle{Conclusions}
-  
+  \begin{itemize}
+  \item MOPS is slow and not robust
+  \item Sparsity is important
+  \item PTAM works well
+  \end{itemize}
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
