@@ -76,7 +76,7 @@ intend to evaluate and extend their work to ascertain the extent this kind of in
 We begin by describing our implementation of the approach in~\cite{lee2011}. Subsequently, we describe our integration of the PTAM system with the quadrotor.
 
 \subsection{Lee et al.'s Method}
-Our approach closely follows that in~\cite{lee2011}. The goal is to make use of MOPS features to limit the number of SIFT features necessary for computing structural information about obstacles. We begin by assuming that we have, as input, two images taken from the quadrotor's forward-facing camera, that the images are of the same scene, and contain corresponding features. Each image from the camera is a $640 \times 360$ pixel colour image; for our purposes, we need only a greyscale image and so discard the colour information.
+Our approach closely follows that in~\cite{lee2011}. The goal is to make use of MOPS features to limit the number of SIFT features necessary for computing structural information about obstacles. We begin by assuming that we have, as input, two images taken from the quadrotor's forward-facing camera, that the images are of the same scene, and contain corresponding features. For our purposes, we need only a greyscale image and so discard the colour information.
 
 In each image, we compute MOPS descriptors~\cite{BSW05}. The descriptors are located at features detected by a multi-scale Harris corner detector. Each descriptor is an $8 \times 8$ patch of bias/gain normalized intensity values and is oriented using a blurred local gradient. Feature density is controlled using an adaptive non-maximal suppression algorithm. SIFT descriptors~\cite{lowe2004} are also computed, using the OpenCV computer vision library *** CITE OpenCV ***.
 
@@ -127,6 +127,24 @@ Our first approach is to directly test PTAM on data from the quadrotor. For this
 Secondly, we made use of the tum\_ardrone *** CITE tum\_ardrone *** package for ROS, which integrates a version of PTAM with an extended Kalman filter for data fusion and state estimation and a system for generating steering commands for the quadrotor. tum\_ardrone builds upon PTAM to provide an environment specifically designed for use with the ARDrone and ARDrone 2, and in addition to obstacle detection, provides a system for navigation and auto-pilot.
 
 \section{Experiments}
+Our data sets consist of samples obtained by recording output from the quadrotor's forward-facing camera. These are $640 \times 360$ pixel colour images saved in JPEG format recorded at a rate of one per each $0.01$ second. Our initial data sets consisted of
+\begin{itemize}
+\item A set of 212 frames in which the drone is sitting still on a table.
+\item A set of 321 frames in which the drone takes off, flies down a Siebel Center hall, and lands.
+\item A set of 301 frames in which the drone takes off, flies through the Siebel Center atrium, and lands.
+\end{itemize}
+These were supplemented with the following additional data sets from the quadrotor, this time recorded at a rate of one per each $0.1$ second.
+\begin{itemize}
+\item A set of 130 frames in which the drone flies through the Siebel Center atrium with additional movement, and people present.
+\item A set of 275 frames in which the drone flies closely along the pillars and display cases of in the Siebel Center atrium.
+\item A set of 49 frames in which the drone flies towards a corner in the Siebel Center atrium.
+\end{itemize}
+
+\subsection{Lee et al.}
+
+
+\subsection{PTAM}
+
 
 \begin{figure*}[h]
   \centering
