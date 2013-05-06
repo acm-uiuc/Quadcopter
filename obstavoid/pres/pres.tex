@@ -79,8 +79,23 @@
   \frametitle{MOPS}
   \begin{itemize}
   \item Multi-Scale Oriented Patches (\emph{Image Matching using Multi-Scale Oriented Patches} (Brown et al. 2004))
-  \item TODO: Include sample image
+  \item Detect features with multi-scale Harris corner detector
+  \item Compute $8 \times 8$ patches of bias/gain normalized intensity values
+  \item Orient using a blurred local gradient
   \end{itemize}
+  \begin{center}
+    \includegraphics[resolution=150, scale=0.65]{images/mops-features.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Some Results: SIFT}
+  \includegraphics[resolution=150, scale=0.52]{images/sift-matches.jpg}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Some Results: MOPS}
+  \includegraphics[resolution=150, scale=0.52]{images/mops-matches.jpg}
 \end{frame}
 
 \begin{frame}
@@ -101,7 +116,7 @@
 \begin{frame}
   \frametitle{A Better Idea}
   \begin{itemize}
-  \item Use faster and more robust features than SIFT and MOPS while still having sparity
+  \item Use faster and more robust features than SIFT and MOPS
   \item PTAM
     \begin{itemize}
     \item An existing monocular SLAM framework using FAST (and other) features
@@ -121,7 +136,7 @@
   \frametitle{Conclusions}
   \begin{itemize}
   \item MOPS is slow and not robust
-  \item Sparsity is important
+  \item The Lee, et al. approach is not robust on the quadrotor
   \item PTAM works well
   \end{itemize}
 \end{frame}
