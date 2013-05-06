@@ -6,6 +6,7 @@
 \usepackage{parskip}
 \usepackage{fixltx2e}
 \usepackage[labelfont=bf,textfont=it]{caption}
+\usepackage{hyperref}
 
 \TOGonlineid{0}
 
@@ -78,13 +79,13 @@ We begin by describing our implementation of the approach in~\cite{lee2011}. Sub
 \subsection{Lee et al.'s Method}
 Our approach closely follows that in~\cite{lee2011}. The goal is to make use of MOPS features to limit the number of SIFT features necessary for computing structural information about obstacles. We begin by assuming that we have, as input, two images taken from the quadrotor's forward-facing camera, that the images are of the same scene, and contain corresponding features. For our purposes, we need only a greyscale image and so discard the colour information.
 
-In each image, we compute MOPS descriptors~\cite{BSW05}. The descriptors are located at features detected by a multi-scale Harris corner detector. Each descriptor is an $8 \times 8$ patch of bias/gain normalized intensity values and is oriented using a blurred local gradient. Feature density is controlled using an adaptive non-maximal suppression algorithm. SIFT descriptors~\cite{lowe2004} are also computed, using the OpenCV computer vision library *** CITE OpenCV ***.
+In each image, we compute MOPS descriptors~\cite{BSW05}. The descriptors are located at features detected by a multi-scale Harris corner detector. Each descriptor is an $8 \times 8$ patch of bias/gain normalized intensity values and is oriented using a blurred local gradient. Feature density is controlled using an adaptive non-maximal suppression algorithm. SIFT descriptors~\cite{lowe2004} are also computed, using the OpenCV computer vision library~\cite{opencv}.
 
 Descriptors in these two images are then matched in order to generate putative matches. For MOPS, matching is performed using a brute-force matcher, since existing $k$-d tree implementations in OpenCV do not support efficient dynamic modification after creation. SIFT features are matched using OpenCV's FLANN fast approximate nearest-neighbour~\cite{flann2009} matcher.
 
-These matches are then used to determine the location of the detected feature points in three-dimensional space via triangulation. Our approach to triangulation is based on the one implemented in PTAM *** CITE PTAM code ***. A homography is first computed between matching points. This homography is then decomposed into rotation and translation matrices~\cite{inria2007} which are used to determine a projection matrix. This is used to triangulate points as usual.
+These matches are then used to determine the location of the detected feature points in three-dimensional space via triangulation. Our approach to triangulation is based on the one implemented in PTAM~\cite{ptamcode}. A homography is first computed between matching points. This homography is then decomposed into rotation and translation matrices~\cite{inria2007} which are used to determine a projection matrix. This is used to triangulate points as usual.
 
-In our implementation, the above steps involving SIFT and MOPS are implemented in parallel using the standard pthreads *** CITE pthreads? *** library. Since to this point there are no interactions between the SIFT and MOPS features and the input images are constant, the operations are independent. We thus run each in a separate thread in order to maximize performance.
+In our implementation, the above steps involving SIFT and MOPS are implemented in parallel using the standard pthreads library. Since to this point there are no interactions between the SIFT and MOPS features and the input images are constant, the operations are independent. We thus run each in a separate thread in order to maximize performance.
 
 The locations of MOPS features indicate the corners of objects in the world. The orientation of the descriptors is used to extract the outlines of objects to obtain edge spatial information. However, this does not provide information on the internal structure of the object; we use the SIFT features to achieve this. We consider SIFT features within the outlines constructed by MOPS features, which provide information on the internal structure of the objects: the distance to the points will indicate the type and extent of the object. An example of merged SIFT and MOPS features from~\cite{lee2011} is provided in Figure~\ref{fig:lee-sift-mops}.
 
@@ -127,11 +128,11 @@ this method.  After locating the contours in an image we marked the key points f
 belonging to an object outline and proceeded as normal through the rest of the approach of~\cite{lee2011}.
 
 \subsection{Integrating PTAM}
-Integrating PTAM with the quadrotor is remarkably simple. We made use of two different methods to accomplish this, in order to have different features available. Both methods rely upon the Robot Operating System (ROS) *** CITE ROS *** for support and the ardrone\_autonomy *** CITE ardrone\_autonomy *** driver for communication with the quadrotor.
+Integrating PTAM with the quadrotor is remarkably simple. We made use of two different methods to accomplish this, in order to have different features available. Both methods rely upon the Robot Operating System (ROS)~\cite{ros} for support and the ardrone\_autonomy~\cite{ardroneautonomy} driver for communication with the quadrotor.
 
-Our first approach is to directly test PTAM on data from the quadrotor. For this, we made use of the ethzasl\_ptam package *** CITE ethzasl\_ptam ***, which integrates PTAM with ROS. It was then only a matter of converting the camera stream from the ardrone\_autonomy driver to the requisite format for use with PTAM and calibrating the camera appropriately.
+Our first approach is to directly test PTAM on data from the quadrotor. For this, we made use of the ethzasl\_ptam package~\cite{ethzaslptam}, which integrates PTAM with ROS. It was then only a matter of converting the camera stream from the ardrone\_autonomy driver to the requisite format for use with PTAM and calibrating the camera appropriately.
 
-Secondly, we made use of the tum\_ardrone *** CITE tum\_ardrone *** package for ROS, which integrates a version of PTAM with an extended Kalman filter for data fusion and state estimation and a system for generating steering commands for the quadrotor. tum\_ardrone builds upon PTAM to provide an environment specifically designed for use with the ARDrone and ARDrone 2, and in addition to obstacle detection, provides a system for navigation and auto-pilot.
+Secondly, we made use of the tum\_ardrone~\cite{tumardrone} package for ROS, which integrates a version of PTAM with an extended Kalman filter for data fusion and state estimation and a system for generating steering commands for the quadrotor. tum\_ardrone builds upon PTAM to provide an environment specifically designed for use with the ARDrone and ARDrone 2, and in addition to obstacle detection, provides a system for navigation and auto-pilot.
 
 \section{Experiments}
 Our data sets consist of samples obtained by recording output from the quadrotor's forward-facing camera. These are $640 \times 360$ pixel colour images saved in JPEG format recorded at a rate of one per each $0.01$ second. Our initial data sets consisted of
@@ -154,7 +155,7 @@ We began by evaluating the SIFT and MOPS features on samples from our data sets.
 
 Figure~\ref{fig:mops-ex} displays results for MOPS keypoints and matches on the same frame pair as above. These are quite poor, and further discussion is made of this in the analysis section. Additionally, it was found that extraction of MOPS descriptors and matching took an much more time than would be appropriate for this application (several seconds) in any situation other than highly constrained thresholds to eliminate most points.
 
-To validate that our feature point detection for MOPS was correct, we took several sample images from our data sets and ran the VLFeat *** CITE VLFeat *** multi-scale Harris corner detector on the images. Results for one such image are displayed in Figure~\ref{fig:vlfeat-ex}. It should be noted that the detected keypoints in that image are quite similar to those detected in the MOPS sample images; as is expected, since MOPS makes use of a multi-scale Harris corner detector.
+To validate that our feature point detection for MOPS was correct, we took several sample images from our data sets and ran the VLFeat~\cite{vlfeat} multi-scale Harris corner detector on the images. Results for one such image are displayed in Figure~\ref{fig:vlfeat-ex}. It should be noted that the detected keypoints in that image are quite similar to those detected in the MOPS sample images; as is expected, since MOPS makes use of a multi-scale Harris corner detector.
 
 \subsection{Contours}
 Subsequently we replaced MOPS features with contours on which we detected SIFT keypoints; see Figure~\ref{fig:contour-ex} for example results, again on the same frame pair. While these results are better than with MOPS, they again are insufficient.
@@ -221,9 +222,9 @@ late to avoid the obstacle.  In doing so, both factors were considered equally i
 
 As~\cite{lee2011} proposed to use a sparse representation in the pursuit of real time performance, one of our primary 
 concerns was if the 3D model it creates would be suitable for our task.  Upon inspecting the results of the tests described
-in Section 4.2, it was obvious that the matches were very noisy, and the subsequent reconstruction using the punitive matches
+in Section 4.1, it was obvious that the matches were very noisy, and the subsequent reconstruction using the punitive matches
 did not produce a model that was representative of the scene.  Of particular note in the case of the example shown was the 
-few number of features detected along the pillar.  The lack of many features on the pillar in the MOPS features indicate 
+few number of features detected along the pillar.  The lack of many MOPS features on the pillar indicates 
 that our object outlines would not be very representative of its true location, making autonomous navigation risky.  While 
 this by itself intensified the misgivings on the approach, it was not clear that an alternative to the MOPS features could 
 not produce a better representation as the SIFT features did provide better punative matches.
@@ -242,7 +243,7 @@ our algorithm making it sensitive to noise.  From this analysis it follows that 
 features very quickly, even if we had several bad matches they would have less effect on our solution.
 
 Using this line of reasoning we explored the effectiveness of the PTAM approch.  This algorithm has been demonstrated to
-perform at 20Hz on a computationally limited platform(an ATOM 1.6GHz single core processor) using up to 300 keypoints in each
+perform at 20Hz on a computationally limited platform (an ATOM 1.6GHz single core processor) using up to 300 keypoints in each
 image to create the punative matches with a RMS error in its position of 3.02cm or less along any axis~\cite{weiss2011}.
 
 
