@@ -34,7 +34,8 @@ There are GPS solutions for navigation that work out of the box (e.g. the AscTec
 to locations where GPS is available.  While much progress has been made towards creating a navigation solution
 for these cases, we still strive to have a system that works in unknown, GPS denied, and cluttered environments.  As many 
 MAV's are limited in both carrying capacity and power, laser range finders are too heavy and consume too much power to be of 
-use. Stereo cameras become highly inaccurate after a set distance, rendering them of no more use than using a single camera.
+use. Stereo cameras become highly inaccurate after a set distance determined by the baseline of the two cameras, 
+rendering them of no more use than using a single camera for far away objects.
 
 The common structure from motion approach~\cite{dellaert2000} to visual navigation using a single camera has been shown to suffer from some 
 drawbacks.  In order to generate a 3D map, two types of camera translation may be necessary~\cite{shah2010}.  While
@@ -57,8 +58,8 @@ mapping (PTAM)~\cite{klein07parallel} approach that was adapted as an online sol
 Due to weight and energy restrictions aboard MAV's, a vision based approach is seen as one of the most viable navigation 
 solutions in GPS denied environments.  Progress in using visual senors for navigation purposes include performing specific 
 tasks such as in~\cite{johnson2005} where a single camera was used to guide and land a MAV, or~\cite{huang2011isrr} where an 
-RGB-D camera was used to map an environment and localize a quadrotor within that map, but is restricted for use in indoor
-environments.
+Kinect was used to map an environment and localize a quadrotor within that map, but is restricted for use in indoor
+environments due to the use of infrared for depth estimates.
 
 Another common approach in the literature uses optical flow to estimate the relative motion between the frames of a camera.
 In these systems one is able to detect collisions by measuring the relative rate of expansion of objects.  This method 
@@ -71,7 +72,7 @@ This approach shares some motivations as the first method attempted in this work
 has only been evaluated on theoretical data.  The authors note that in some cases image segmentation is not possible and 
 intend to evaluate and extend their work to ascertain the extent this kind of information is beneficial to navigation.
 
-An approach specifically tailored for low-cost quadrotors is described in \cite{engel2012a,engel2012b}. The system they develop is designed for use with quadrotors paired with a laptop for processing, and builds upon the PTAM monocular SLAM system. The authors have demonstrated their approach with ARDrone quadrotors, and we make use of their system to evaluate and compare PTAM with \cite{lee2011}.
+An approach specifically tailored for low-cost quadrotors is described in \cite{engel2012a,engel2012b}. The system they develop is designed for use with quadrotors paired with a laptop for processing, and builds upon the PTAM monocular SLAM system. The authors have demonstrated their approach with ARDrone quadrotors, and we make use of their system of quadrotor control to evaluate and compare PTAM with \cite{lee2011}.
 
 \section{Approach}
 We begin by describing our implementation of the approach in~\cite{lee2011}. Subsequently, we introduce a variation we attempted to generate an improved 3D map than we obtained using the unmodified version of~\cite{lee2011}.  Lastly, we describe our integration of the PTAM system with the quadrotor.
@@ -123,7 +124,7 @@ This comparison allows us to determine what sort of obstacle an object is and to
 \subsection{Replacing MOPS with Contours}
 After finding object outlines using MOPS features to not give sufficient information, we sought an 
 alternative approach.  As~\cite{suzuki1985} has been widely tested and locates contours within an image it appeared to be 
-sufficient to meet our needs. We used the Canny Edge Detector~\cite{canny1986} to convert to binary images as the input to
+sufficient to locate the outlines of objects. We used the Canny Edge Detector~\cite{canny1986} to convert to binary images as the input to
 this method.  After locating the contours in an image we marked the key points found using the SIFT algorithm as 
 belonging to an object outline and proceeded as normal through the rest of the approach of~\cite{lee2011} (see Figure~\ref{fig:contour-ex}).
 
@@ -163,7 +164,7 @@ Subsequently we replaced MOPS features with contours on which we detected SIFT k
 \subsection{PTAM}
 PTAM was evaluated on a live-stream from the quadrotor as it flew, as it could not be meaningfully evaluated on the sample data sets we had recorded. PTAM was able to successfully initialize and maintain a map of its environment which included the relative distance from the quadrotor to objects. An example map of the environment produced by PTAM is shown in Figure~\ref{fig:ptam-ex}.
 
-This performance was sufficient for real-time operation, and we were able to successfully fly the quadrotor through environments using the tum\_ardrone package.
+This performance was sufficient for real-time operation, and we were able to successfully fly the quadrotor through environments using the tum\_ardrone package.  See our supplementary video to observe PTAM's performance during one of our test flights.
 
 \begin{figure*}[h]
   \centering
@@ -225,7 +226,7 @@ to be be appropriate for our task:
 
 If an algorithm is unable to create an accurate representation of a scene then it would be unsuitable to use for navigation
 purposes.  On the other hand, if it is unable to run in real time collision information may not be available until it is too
-late to avoid the obstacle.  In doing so, both factors were considered equally important in our evaluation.
+late to avoid the obstacle.  Both factors were considered equally important in our evaluation.
 
 As~\cite{lee2011} proposed to use a sparse representation in the pursuit of real time performance, one of our primary 
 concerns was if the 3D model it creates would be suitable for our task.  Upon inspecting the results of the tests described
@@ -234,10 +235,10 @@ did not produce a model that was representative of the scene.  Of particular not
 few number of features detected along the pillar.  The lack of many MOPS features on the pillar indicates 
 that our object outlines would not be very representative of its true location, making autonomous navigation risky.  While 
 this by itself intensified the misgivings on the approach, it was not clear that an alternative to the MOPS features could 
-not produce a better representation as the SIFT features did provide better punative matches.
+not produce a better representation as the SIFT features did provide better punitive matches.
 
 This was reinforced with our test using image contours rather than MOPS features as we were able to create a better set of
-punative matches between the images.  While the reconstruction using these matches still produced a 3D model that would not
+punitive matches between the images.  While the reconstruction using these matches still produced a 3D model that would not
 be sufficient for our task, it does indicate that additional work could be performed in this space that would see better
 results.  In addition, it is important to note that while the display cases in the presented example present additional
 challenges for any reconstruction effort, the algorithm did not produce good results in images without any glass in the 
@@ -249,16 +250,17 @@ reducing the number of keypoints used for matching and reconstruction, it also a
 our algorithm making it sensitive to noise.  From this analysis it follows that if we were able to compute a large number of
 features very quickly, even if we had several bad matches they would have less effect on our solution.
 
-Using this line of reasoning we explored the effectiveness of the PTAM approch.  This algorithm has been demonstrated to
+Using this line of reasoning we explored the effectiveness of the PTAM approach.  This algorithm has been demonstrated to
 perform at 20Hz on a computationally limited platform (an ATOM 1.6GHz single core processor) using up to 300 keypoints in each
-image to create the punative matches with a RMS error in its position of 3.02cm or less along any axis~\cite{weiss2011}. This
+image to create the punitive matches with a RMS error in its position of 3.02cm or less along any axis~\cite{weiss2011}. This
 approach is not without its own drawbacks, however.
 
 In~\cite{weiss2011} they recommend at least 90 percent overlap between frames for good tracking. In our own test flights 
 using this system we found that the quadrotor's position was lost in the map when stopping suddenly, and rotations also 
-contributed to errors and should be avoided as much as possible.  As with many other vision based applications, textureless 
-surfaces continue to be a problem and can result in loss of a quadrotor's position.  This seems to point to using a downward 
-facing camera to avoid rotations and help increase the probability of a feature rich map by using a wide field of view camera.
+contributed to position errors and should be avoided as much as possible.  As with many other vision based applications, 
+textureless surfaces continue to be a problem and can result in loss of a quadrotor's position.  This seems to point to using 
+a downward facing camera to avoid rotations. This would help increase the probability of obtaining a feature rich map by 
+using a wide field of view camera as a way of reducing the impact of these restrictions.
 
 \section{Individual Contributions}
 Individual contributions break down roughly as follows. Nikoli was responsible for:
