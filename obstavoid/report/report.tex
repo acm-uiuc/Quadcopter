@@ -24,34 +24,33 @@ We implement and evaluate the approach of~\cite{lee2011} for obstacle avoidance 
 \end{abstract}
 
 \section{Introduction}
-Micro aerial vehicles(MAV's), which include quadrotor and unmanned aerial vehicles(UAV's), have the potential to become more 
-prominent over the next several years.  These aircraft allow easy access for many places which are difficult for humans 
-to go in a safer manner for both humans and the environment and have applications reaching into search and rescue, tracking,
-mapping, and others.  In order for the higher level tasks to be handled these vehicles must have a reliable 
+Micro aerial vehicles (MAV's), which include quadrotor and unmanned aerial vehicles (UAV's), have the potential to become more 
+prominent over the next several years.  These aircraft allow safe, easy access to many places which are difficult for humans to go, and have applications reaching into search and rescue, tracking, mapping, and others.,
+In order for the higher level tasks to be handled these vehicles must have a reliable 
 navigation system.
 
-There are GPS solutions for navigation work out of the box (e.g. the AscTec series of quadrotors), but are limited in use
-to locations where GPS is available.  While much progress has been made to solve to create a navigation solution
+There are GPS solutions for navigation that work out of the box (e.g. the AscTec series of quadrotors), but are limited in use
+to locations where GPS is available.  While much progress has been made towards creating a navigation solution
 for these cases, we still strive to have a system that works in unknown, GPS denied, and cluttered environments.  As many 
 MAV's are limited in both carrying capacity and power, laser range finders are too heavy and consume too much power to be of 
-use. Stereo camera's become highly inaccurate after a set distance rendering them of no more use than using a single camera.
+use. Stereo cameras become highly inaccurate after a set distance, rendering them of no more use than using a single camera.
 
-The common structure from motion approach to visual navigation using a single camera has been shown to suffer from some 
+The common structure from motion approach~\cite{dellaert2000} to visual navigation using a single camera has been shown to suffer from some 
 drawbacks.  In order to generate a 3D map, two types of camera translation may be necessary~\cite{shah2010}.  While
 a quadrotor may be capable of such a maneuver, a UAV is not.  In~\cite{shah2009} the amount of computation required using this 
 approach increased by about 15 times with only an increase from 8 to 35 feature points, and the number of features in a real
 scene can number in the hundreds or thousands.
 
 As an attempt to solve this problem~\cite{lee2011} proposed an approach to reduce the number of points required to 
-represent the 3D structure of a scene.  The authors used multiscale oriented patches(MOPS)~\cite{BSW05} to create outlines of 
+represent the 3D structure of a scene.  The authors used multiscale oriented patches (MOPS)~\cite{BSW05} to create outlines of 
 objects.  Since the outlines themselves are unable to tell if an outline is empty or not, they used the 3D location of SIFT 
 features~\cite{lowe2004} located within the outlines to obtain this information.  
 
 Although the proposed method cited collision avoidance for a quadrotor as its intended application, the authors did not 
 dispense any data on its effectiveness in real scenes from images taken using a quadrotor.  This paper provides just such an 
-evaluation using images taken from the AR-Drone 2.0 quadrotor with the processing being performed on a laptop obtaining the 
+evaluation using images taken from an ARDrone 2 quadrotor with the processing being performed on a laptop obtaining the 
 images from the quadrotor through a wireless network. In addition, we evaluate the use of the parallel tracking and 
-mapping(PTAM)~\cite{klein07parallel} approach that was adapted as an online solution for quadrotors in~\cite{weiss2011}.
+mapping (PTAM)~\cite{klein07parallel} approach that was adapted as an online solution for quadrotors in~\cite{weiss2011}.
 
 \section{Related Work}
 Due to weight and energy restrictions aboard MAV's a vision based approach is seen as one of the most viable navigation 
