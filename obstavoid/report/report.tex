@@ -161,7 +161,7 @@ To validate that our feature point detection for MOPS was correct, we took sever
 Subsequently we replaced MOPS features with contours on which we detected SIFT keypoints; see Figure~\ref{fig:contour-ex} for example results, again on the same frame pair. While these results are better than with MOPS, they again are insufficient.
 
 \subsection{PTAM}
-PTAM was evaluated on a live-stream from the quadrotor as it flew, as it could not be meaningfully evaluated on the sample data sets we had recorded. PTAM was able to successfully initialize and maintain a map of its environment which included the relative distance from the quadrotor to objects. See Figure *** REF FIGURE *** for an example of the map produced.
+PTAM was evaluated on a live-stream from the quadrotor as it flew, as it could not be meaningfully evaluated on the sample data sets we had recorded. PTAM was able to successfully initialize and maintain a map of its environment which included the relative distance from the quadrotor to objects. An example map of the environment produced by PTAM is shown in Figure~\ref{fig:ptam-ex}.
 
 This performance was sufficient for real-time operation, and we were able to successfully fly the quadrotor through environments using the tum\_ardrone package.
 
