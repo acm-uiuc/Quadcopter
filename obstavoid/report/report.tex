@@ -53,23 +53,24 @@ images from the quadrotor through a wireless network. In addition, we evaluate t
 mapping (PTAM)~\cite{klein07parallel} approach that was adapted as an online solution for quadrotors in~\cite{weiss2011}.
 
 \section{Related Work}
-Due to weight and energy restrictions aboard MAV's a vision based approach is seen as one of the most viable navigation 
+Due to weight and energy restrictions aboard MAV's, a vision based approach is seen as one of the most viable navigation 
 solutions in GPS denied environments.  Progress in using visual senors for navigation purposes include performing specific 
 tasks such as in~\cite{johnson2005} where a single camera was used to guide and land a MAV, or~\cite{huang2011isrr} where an 
-RGB-D camera was used to map an environment and localize a quadrotor within that map but is restricted for use in indoor
+RGB-D camera was used to map an environment and localize a quadrotor within that map, but is restricted for use in indoor
 environments.
 
 Another common approach in the literature uses optical flow to estimate the relative motion between the frames of a camera.
 In these systems one is able to detect collisions by measuring the relative rate of expansion of objects.  This method 
-behaves poorly when light intensity doesn't remain constant~\cite{horn1981} and tends to be sensitive to noise and
+behaves poorly when light intensity does not remain constant~\cite{horn1981} and tends to be sensitive to noise and
 an unstable camera.  As all MAV's will contribute to some vibrations in the camera this leads to inaccurate estimates in
 flow vectors.
 
 Some recent work attempts to use image segmentation to identify an obstacle and build a dense map around it~\cite{ha2012}.  
-This approach shares some motivations as the first method attempted in this work in that it attempts to reduce the number
-of computations required for navigation by using a limited number of feature points.  As with~\cite{lee2011}, this approach
+This approach shares some motivations as the first method attempted in this work in that it attempts to reduce the computation required for navigation by using a limited number of feature points.  As with~\cite{lee2011}, this approach
 has only been evaluated on theoretical data.  The authors note that in some cases image segmentation is not possible and 
 intend to evaluate and extend their work to ascertain the extent this kind of information is beneficial to navigation.
+
+An approach specifically tailored for low-cost quadrotors is described in \cite{engel2012a,engel2012b}. The system they develop is designed for use with quadrotors paired with a laptop for processing, and builds upon the PTAM monocular SLAM system. The authors have demonstrated their approach with ARDrone quadrotors, and we make use of their system to evaluate and compare PTAM with \cite{lee2011}.
 
 \section{Approach}
 We begin by describing our implementation of the approach in~\cite{lee2011}. Subsequently, we introduce a variation we attempted to generate an improved 3D map than we obtained using the unmodified version of~\cite{lee2011}.  Lastly, we describe our integration of the PTAM system with the quadrotor.
