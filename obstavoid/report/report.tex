@@ -79,9 +79,9 @@ We begin by describing our implementation of the approach in~\cite{lee2011}. Sub
 \subsection{Lee et al.'s Method}
 Our approach closely follows that in~\cite{lee2011}. The goal is to make use of MOPS features to limit the number of SIFT features necessary for computing structural information about obstacles. We begin by assuming that we have, as input, two images taken from the quadrotor's forward-facing camera, that the images are of the same scene, and contain corresponding features. For our purposes, we need only a greyscale image and so discard the colour information.
 
-In each image, we compute MOPS descriptors~\cite{BSW05}. The descriptors are located at features detected by a multi-scale Harris corner detector. Each descriptor is an $8 \times 8$ patch of bias/gain normalized intensity values and is oriented using a blurred local gradient. Feature density is controlled using an adaptive non-maximal suppression algorithm. SIFT descriptors~\cite{lowe2004} are also computed, using the OpenCV computer vision library~\cite{opencv}.
+In each image, we compute MOPS descriptors~\cite{BSW05} (see Figure~\ref{fig:mops-ex}). The descriptors are located at features detected by a multi-scale Harris corner detector. Each descriptor is an $8 \times 8$ patch of bias/gain normalized intensity values and is oriented using a blurred local gradient. Feature density is controlled using an adaptive non-maximal suppression algorithm. SIFT descriptors~\cite{lowe2004} are also computed (see Figure~\ref{fig:sift-ex}), using the OpenCV computer vision library~\cite{opencv}.
 
-Descriptors in these two images are then matched in order to generate putative matches. For MOPS, matching is performed using a brute-force matcher, since existing $k$-d tree implementations in OpenCV do not support efficient dynamic modification after creation. SIFT features are matched using OpenCV's FLANN fast approximate nearest-neighbour~\cite{flann2009} matcher.
+Descriptors in these two images are then matched in order to generate putative matches (see Figures~\ref{fig:sift-ex} and \ref{fig:mops-ex}). For MOPS, matching is performed using a brute-force matcher, since existing $k$-d tree implementations in OpenCV do not support efficient dynamic modification after creation. SIFT features are matched using OpenCV's FLANN fast approximate nearest-neighbour~\cite{flann2009} matcher.
 
 These matches are then used to determine the location of the detected feature points in three-dimensional space via triangulation. Our approach to triangulation is based on the one implemented in PTAM~\cite{ptamcode}. A homography is first computed between matching points. This homography is then decomposed into rotation and translation matrices~\cite{inria2007} which are used to determine a projection matrix. This is used to triangulate points as usual.
 
@@ -125,7 +125,7 @@ After finding object outlines using MOPS features to not give sufficient informa
 alternative approach.  As~\cite{suzuki1985} has been widely tested and locates contours within an image it appeared to be 
 sufficient to meet our needs. We used the Canny Edge Detector~\cite{canny1986} to convert to binary images as the input to
 this method.  After locating the contours in an image we marked the key points found using the SIFT algorithm as 
-belonging to an object outline and proceeded as normal through the rest of the approach of~\cite{lee2011}.
+belonging to an object outline and proceeded as normal through the rest of the approach of~\cite{lee2011} (see Figure~\ref{fig:contour-ex}).
 
 \subsection{Integrating PTAM}
 Integrating PTAM with the quadrotor is remarkably simple. We made use of two different methods to accomplish this, in order to have different features available. Both methods rely upon the Robot Operating System (ROS)~\cite{ros} for support and the ardrone\_autonomy~\cite{ardroneautonomy} driver for communication with the quadrotor.
