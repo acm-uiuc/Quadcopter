@@ -151,7 +151,7 @@ We additionally conducted experiments in which we evaluated methods on live data
 \subsection{Lee et al.}
 We began by evaluating the SIFT and MOPS features on samples from our data sets. As this is the basis upon which the rest of the approach is built, this is a reasonable place to begin. SIFT keypoints and the computed matches for a sample image are shown in Figure~\ref{fig:sift-ex}. As can be seen, the matches between keypoints in general appear to be reasonable.
 
-Figure~\ref{fig:mops-ex} displays results for MOPS keypoints and matches on the same frame pair as above. These are quite poor, and further discussion is made of this in the analysis section. Additionally, it was found that extraction of MOPS descriptors and matching took an excessive amount of time (multiple minutes) in any situation other than highly constrained thresholds to eliminate most points.
+Figure~\ref{fig:mops-ex} displays results for MOPS keypoints and matches on the same frame pair as above. These are quite poor, and further discussion is made of this in the analysis section. Additionally, it was found that extraction of MOPS descriptors and matching took an much more time than would be appropriate for this application (several seconds) in any situation other than highly constrained thresholds to eliminate most points.
 
 To validate that our feature point detection for MOPS was correct, we took several sample images from our data sets and ran the VLFeat *** CITE VLFeat *** multi-scale Harris corner detector on the images. Results for one such image are displayed in Figure~\ref{fig:vlfeat-ex}. It should be noted that the detected keypoints in that image are quite similar to those detected in the MOPS sample images; as is expected, since MOPS makes use of a multi-scale Harris corner detector.
 
@@ -206,6 +206,43 @@ This performance was sufficient for real-time operation, and we were able to suc
 \end{figure*}
 
 \section{Analysis}
+During our experiments we considered the following factors as the primary characteristics the algorithm must possess in order
+to be be appropriate for our task:
+
+\begin{enumerate}
+ \item It must robustly produce an accurate 3D model of the world.
+ \item It must run in real time.
+\end{enumerate}
+
+If an algorithm is unable to create an accurate representation of a scene then it would be unsuitable to use for navigation
+purposes.  On the other hand, if it is unable to run in real time collision information may not be available until it is too
+late to avoid the obstacle.  In doing so, both factors were considered equally important in our evaluation.
+
+As~\cite{lee2011} proposed to use a sparse representation in the pursuit of real time performance, one of our primary 
+concerns was if the 3D model it creates would be suitable for our task.  Upon inspecting the results of the tests described
+in Section 4.2, it was obvious that the matches were very noisy, and the subsequent reconstruction using the punitive matches
+did not produce a model that was representative of the scene.  Of particular note in the case of the example shown was the 
+few number of features detected along the pillar.  The lack of many features on the pillar in the MOPS features indicate 
+that our object outlines would not be very representative of its true location, making autonomous navigation risky.  While 
+this by itself intensified the misgivings on the approach, it was not clear that an alternative to the MOPS features could 
+not produce a better representation as the SIFT features did provide better punative matches.
+
+This was reinforced with our test using image contours rather than MOPS features as we were able to create a better set of
+punative matches between the images.  While the reconstruction using these matches still produced a 3D model that would not
+be sufficient for our task, it does indicate that additional work could be performed in this space that would see better
+results.  In addition, it is important to note that while the display cases in the presented example present additional
+challenges for any reconstruction effort, the algorithm did not produce good results in images without any glass in the 
+frame.  
+
+Even though some progress was made to create a more accurate representation, it came at the cost of increasing the
+number of features in a scene and the computational effort that would be necessary for navigation.  Since we focus on 
+reducing the number of keypoints used for matching and reconstruction, it also amplifies the effect poor matches have on
+our algorithm making it sensitive to noise.  From this analysis it follows that if we were able to compute a large number of
+features very quickly, even if we had several bad matches they would have less effect on our solution.
+
+Using this line of reasoning we explored the effectiveness of the PTAM approch.  This algorithm has been demonstrated to
+perform at 20Hz on a computationally limited platform(an ATOM 1.6GHz single core processor) using up to 300 keypoints in each
+image to create the punative matches with a RMS error in its position of 3.02cm or less along any axis~\cite{weiss2011}.
 
 
 \section{Individual Contributions}
