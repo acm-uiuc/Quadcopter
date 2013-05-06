@@ -120,11 +120,11 @@ In the third case, we repeat the above process feature points on an object behin
 This comparison allows us to determine what sort of obstacle an object is and to locate where in the world the objects exist, relative to the quadrotor.
 
 \subsection{Replacing MOPS with Contours}
-After finding object outlines using MOPS features to not give an insufficient amount of information, we sought an 
+After finding object outlines using MOPS features to not give sufficient information, we sought an 
 alternative approach.  As~\cite{suzuki1985} has been widely tested and locates contours within an image it appeared to be 
 sufficient to meet our needs. We used the Canny Edge Detector~\cite{canny1986} to convert to binary images as the input to
 this method.  After locating the contours in an image we marked the key points found using the SIFT algorithm as 
-belonging to an object outline and proceeded as normal through the rest of the approach of~\cite{lee2011} as normal.
+belonging to an object outline and proceeded as normal through the rest of the approach of~\cite{lee2011}.
 
 \subsection{Integrating PTAM}
 Integrating PTAM with the quadrotor is remarkably simple. We made use of two different methods to accomplish this, in order to have different features available. Both methods rely upon the Robot Operating System (ROS) *** CITE ROS *** for support and the ardrone\_autonomy *** CITE ardrone\_autonomy *** driver for communication with the quadrotor.
@@ -147,18 +147,27 @@ These were supplemented with the following additional data sets from the quadrot
 \item A set of 49 frames in which the drone flies towards a corner in the Siebel Center atrium.
 \end{itemize}
 
-\subsection{Lee et al.}
+We additionally conducted experiments in which we evaluated methods on live data from the quadrotor while it was flying.
 
+\subsection{Lee et al.}
+We began by evaluating the SIFT and MOPS features on samples from our data sets. As this is the basis upon which the rest of the approach is built, this is a reasonable place to begin. SIFT keypoints and the computed matches for a sample image are shown in Figure~\ref{fig:sift-ex}. As can be seen, the matches between keypoints in general appear to be reasonable.
+
+Figure~\ref{fig:mops-ex} displays results for MOPS keypoints and matches on the same frame pair as above. These are quite poor, and further discussion is made of this in the analysis section. Additionally, it was found that extraction of MOPS descriptors and matching took an excessive amount of time (multiple minutes) in any situation other than highly constrained thresholds to eliminate most points.
+
+\subsection{Contours}
+Subsequently we replaced MOPS features with contours on which we detected SIFT keypoints; see Figure~\ref{fig:contour-ex} for example results, again on the same frame pair. While these results are better than with MOPS, they again are insufficient.
 
 \subsection{PTAM}
+PTAM was evaluated on a live-stream from the quadrotor as it flew, as it could not be meaningfully evaluated on the sample datasets we had recorded. PTAM was able to successfully initialize and maintain a map of its environment which included the relative distance from the quadrotor to objects. See Figure *** REF FIGURE *** for an example of the map produced.
 
+This performance was sufficient for real-time operation, and we were able to successfully fly the quadrotor through environments using the tum\_ardrone package.
 
 \begin{figure*}[h]
   \centering
   \begin{tabular}{cc}
     \includegraphics[resolution=150, scale=0.75]{images/sift-kp1} &
     \includegraphics[resolution=150, scale=0.75]{images/sift-kp2} \\
-    \multicolumn{2}{c}{\includegraphics[resolution=150, scale=0.75]{images/sift-matches}}
+    \multicolumn{2}{c}{\includegraphics[resolution=150, scale=0.77]{images/sift-matches}}
   \end{tabular}
   \caption{SIFT keypoints and matches.}
   \label{fig:sift-ex}
@@ -169,7 +178,7 @@ These were supplemented with the following additional data sets from the quadrot
   \begin{tabular}{cc}
     \includegraphics[resolution=150, scale=0.75]{images/mops-kp1} &
     \includegraphics[resolution=150, scale=0.75]{images/mops-kp2} \\
-    \multicolumn{2}{c}{\includegraphics[resolution=150, scale=0.75]{images/mops-matches}}
+    \multicolumn{2}{c}{\includegraphics[resolution=150, scale=0.77]{images/mops-matches}}
   \end{tabular}
   \caption{MOPS keypoints and matches.}
   \label{fig:mops-ex}
@@ -182,7 +191,7 @@ These were supplemented with the following additional data sets from the quadrot
     \includegraphics[resolution=150, scale=0.75]{images/contour-lines2} \\
     \includegraphics[resolution=150, scale=0.75]{images/contour-kp1} &
     \includegraphics[resolution=150, scale=0.75]{images/contour-kp2} \\
-    \multicolumn{2}{c}{\includegraphics[resolution=150, scale=0.75]{images/contour-matches}}
+    \multicolumn{2}{c}{\includegraphics[resolution=150, scale=0.77]{images/contour-matches}}
   \end{tabular}
   \caption{Contour lines, keypoints, and matches.}
   \label{fig:contour-ex}
