@@ -25,15 +25,15 @@ We implement and evaluate the approach of~\cite{lee2011} for obstacle avoidance 
 \end{abstract}
 
 \section{Introduction}
-Micro aerial vehicles (MAV's), which include quadrotor and unmanned aerial vehicles (UAV's), have the potential to become more 
-prominent over the next several years.  These aircraft allow safe, easy access to many places which are difficult for humans to go, and have applications reaching into search and rescue, tracking, mapping, and others.,
-In order for the higher level tasks to be handled these vehicles must have a reliable 
+Micro aerial vehicles (MAVs), which include quadrotor and unmanned aerial vehicles (UAVs), have the potential to become more 
+prominent over the next several years.  These aircraft allow safe, easy access to many places which are difficult for humans to go, and have applications reaching into search and rescue, tracking, mapping, and others.
+In order for the higher level tasks to be handled, these vehicles must have a reliable 
 navigation system.
 
 There are GPS solutions for navigation that work out of the box (e.g. the AscTec series of quadrotors), but are limited in use
 to locations where GPS is available.  While much progress has been made towards creating a navigation solution
 for these cases, we still strive to have a system that works in unknown, GPS denied, and cluttered environments.  As many 
-MAV's are limited in both carrying capacity and power, laser range finders are too heavy and consume too much power to be of 
+MAVs are limited in both carrying capacity and power, laser range finders are too heavy and consume too much power to be of 
 use. Stereo cameras become highly inaccurate after a set distance, rendering them of no more use than using a single camera.
 
 The common structure from motion approach~\cite{dellaert2000} to visual navigation using a single camera has been shown to suffer from some 
@@ -54,7 +54,7 @@ images from the quadrotor through a wireless network. In addition, we evaluate t
 mapping (PTAM)~\cite{klein07parallel} approach that was adapted as an online solution for quadrotors in~\cite{weiss2011}.
 
 \section{Related Work}
-Due to weight and energy restrictions aboard MAV's, a vision based approach is seen as one of the most viable navigation 
+Due to weight and energy restrictions aboard MAVs, a vision based approach is seen as one of the most viable navigation 
 solutions in GPS denied environments.  Progress in using visual senors for navigation purposes include performing specific 
 tasks such as in~\cite{johnson2005} where a single camera was used to guide and land a MAV, or~\cite{huang2011isrr} where an 
 RGB-D camera was used to map an environment and localize a quadrotor within that map, but is restricted for use in indoor
@@ -63,7 +63,7 @@ environments.
 Another common approach in the literature uses optical flow to estimate the relative motion between the frames of a camera.
 In these systems one is able to detect collisions by measuring the relative rate of expansion of objects.  This method 
 behaves poorly when light intensity does not remain constant~\cite{horn1981} and tends to be sensitive to noise and
-an unstable camera.  As all MAV's will contribute to some vibrations in the camera this leads to inaccurate estimates in
+an unstable camera.  As all MAVs will contribute to some vibrations in the camera this leads to inaccurate estimates in
 flow vectors.
 
 Some recent work attempts to use image segmentation to identify an obstacle and build a dense map around it~\cite{ha2012}.  
