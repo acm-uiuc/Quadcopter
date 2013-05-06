@@ -244,8 +244,14 @@ features very quickly, even if we had several bad matches they would have less e
 
 Using this line of reasoning we explored the effectiveness of the PTAM approch.  This algorithm has been demonstrated to
 perform at 20Hz on a computationally limited platform (an ATOM 1.6GHz single core processor) using up to 300 keypoints in each
-image to create the punative matches with a RMS error in its position of 3.02cm or less along any axis~\cite{weiss2011}.
+image to create the punative matches with a RMS error in its position of 3.02cm or less along any axis~\cite{weiss2011}. This
+approach is not without its own drawbacks, however.
 
+In~\cite{weiss2011} they recommend at least 90 percent overlap between frames for good tracking. In our own test flights 
+using this system we found that the quadrotor's position was lost in the map when stopping suddenly, and rotations also 
+contributed to errors and should be avoided as much as possible.  As with many other vision based applications, textureless 
+surfaces continue to be a problem and can result in loss of a quadrotor's position.  This seems to point to using a downward 
+facing camera to avoid rotations and help increase the probability of a feature rich map by using a wide field of view camera.
 
 \section{Individual Contributions}
 Individual contributions break down roughly as follows. Nikoli was responsible for:
